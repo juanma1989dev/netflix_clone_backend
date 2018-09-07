@@ -1,0 +1,14 @@
+
+type Query {
+    movies:[Movie!]!
+}
+
+type Mutation {
+    createMovie(title:String!,content:String!):Movie
+}
+
+type Movie {
+    id:ID!,
+    title:String!,
+    content:String!
+}
