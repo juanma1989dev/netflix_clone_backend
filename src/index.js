@@ -1,39 +1,45 @@
-const { GraphQLServer } =  require('graphql-yoga')
+require('dotenv').config()
 
-const typeDefs =  `
+const { GraphQLServer } =  require('graphql-yoga');
+const { Prisma } = require('prisma-binding');
 
-    type Query{
-        description:String
-    }
-`;
+const  Query = require('./resolvers/Query');
+const  Mutation = require('./resolvers/Mutation');
+const Subscription = require('./resolvers/Subscription');
 
-let movies = [];
-let idCount = 0
+const PRISMA_ENDPOINT = process.env.PRISMA_ENDPOINT || 'https://us1.prisma.sh/juan-manuel-guzman-rodriguez-0b9982/netflix/dev';
 
 const resolvers = {
-
-    Query:{
-        movies:() => movies
-    },
-     
-    Mutation:{
-        createMovie:(root,args) => {
-            const movie = {
-                id:`id_movie_${idCount++}`,
-                title:args.title,
-                content:args.content,
-            }
-            movies.push(movie)
-            return movie
-        }
-
-    }
-
+    Query,
+    Mutation, 
+    Subscription
 }
 
 const server = new GraphQLServer({
     typeDefs:'./src/schema.graphql',
-    resolvers
+    resolvers,
+    context: req => ({
+        ... req,
+        db: new Prisma({
+            typeDefs: 'src/generated/prisma.graphql',
+            endpoint: PRISMA_ENDPOINT,
+            debug: true
+        })
+    }),
+    resolverValidationOptions: {
+        requireResolversForResolveType: false
+    }
 })
 
-server.start(() => console.log("Server is running in http://localhost:4000"))
+//module.exports = server;
+
+//var server = require('../index');
+
+
+const PORT = process.env.PORT || 4000;
+
+const options = {
+    port : PORT
+}
+
+server.start(options, () => console.log("Server is running in http://localhost:4000"))

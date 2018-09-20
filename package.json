@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "Clone del backend de netflix",
   "main": "src/index.js",
-  "author": "Edwin Salgado",
+  "author": "Juan Manuel",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start":"nodemon src/index.js"
+    "start": "nodemon src/index.js",
+    "test" : "jest"
   },
   "dependencies": {
-    "graphql-yoga": "^1.16.2"
+    "bcrypt": "^3.0.0",
+    "dotenv": "^6.0.0",
+    "graphql-yoga": "^1.16.2",
+    "jest": "^23.6.0",
+    "jsonwebtoken": "^8.3.0",
+    "prisma-binding": "^2.1.5"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"

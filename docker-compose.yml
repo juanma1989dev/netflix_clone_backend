@@ -1,0 +1,38 @@
+version: "3"
+services:
+  api:
+    build: .
+    volumes:
+      - "./:/app"
+      - "/app/node_modules"
+    ports:
+      - "4000:4000"
+  prisma:
+    image: prismagraphql/prisma:1.15
+    restart: always
+    ports: 
+      - "4466:4466"
+    environment: 
+      PRISMA_CONFIG: |
+        port: 4466
+        managementApiSecret: netflix123
+        databases: 
+          default:
+            connector: postgres
+            host: postgres-db
+            port: 5423
+            user: netflix
+            password: netflix
+            migrations: true
+  postgres-db:
+    image: postgres:10
+    restart: always
+    ports: 
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=netflix
+      - POSTGRES_PASSWORD=netflix
+    volumes: 
+      - "db-data:/var/lib/postgresql/data"
+volumes:
+  db-data:
